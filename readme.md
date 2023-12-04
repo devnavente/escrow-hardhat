@@ -23,3 +23,7 @@ Compile the contracts using `npx hardhat compile`. The artifacts will be placed 
 `cd` into the `/app` directory and run `npm install`
 
 To run the front-end application run `npm start` from the `/app` directory. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## Notes
+
+- The data storage is not efficient, since the application uses the contract as a small database. This would not be a good solution in a real-life application, but the purpose of this project is to improve and test my Solidity skills, and interacting with the contract as much as possible helped to meet this goal. 🙂
