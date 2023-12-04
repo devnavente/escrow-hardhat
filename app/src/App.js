@@ -1,23 +1,34 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import deploy from './deploy';
-import Escrow from './Escrow';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+/** Components */
+import Header from './components/Header';
+/** Pages */
+import Home from './pages/Home';
+import PublishCourse from './pages/PublishCourse';
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+/**
+ * TODO:
+ * - Home
+ * - Course creation
+ * - Courses list
+ * - Course page (before/after joining)
+ * - Lesson
+ * - Course finished!!
+ * - Teacher profile (me vs others)
+ * - Student profile (me vs others)
+ */
 
-export async function approve(escrowContract, signer) {
-  const approveTxn = await escrowContract.connect(signer).approve();
-  await approveTxn.wait();
-}
+const provider = window.ethereum ? new ethers.providers.Web3Provider(window.ethereum) : null;
 
 function App() {
-  const [escrows, setEscrows] = useState([]);
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
 
   useEffect(() => {
     async function getAccounts() {
       const accounts = await provider.send('eth_requestAccounts', []);
+      //console.log(accounts[0]);
 
       setAccount(accounts[0]);
       setSigner(provider.getSigner());
@@ -26,75 +37,18 @@ function App() {
     getAccounts();
   }, [account]);
 
-  async function newContract() {
-    const beneficiary = document.getElementById('beneficiary').value;
-    const arbiter = document.getElementById('arbiter').value;
-    const value = ethers.BigNumber.from(document.getElementById('wei').value);
-    const escrowContract = await deploy(signer, arbiter, beneficiary, value);
-
-
-    const escrow = {
-      address: escrowContract.address,
-      arbiter,
-      beneficiary,
-      value: value.toString(),
-      handleApprove: async () => {
-        escrowContract.on('Approved', () => {
-          document.getElementById(escrowContract.address).className =
-            'complete';
-          document.getElementById(escrowContract.address).innerText =
-            "✓ It's been approved!";
-        });
-
-        await approve(escrowContract, signer);
-      },
-    };
-
-    setEscrows([...escrows, escrow]);
-  }
-
   return (
-    <>
-      <div className="contract">
-        <h1> New Contract </h1>
-        <label>
-          Arbiter Address
-          <input type="text" id="arbiter" />
-        </label>
-
-        <label>
-          Beneficiary Address
-          <input type="text" id="beneficiary" />
-        </label>
-
-        <label>
-          Deposit Amount (in Wei)
-          <input type="text" id="wei" />
-        </label>
-
-        <div
-          className="button"
-          id="deploy"
-          onClick={(e) => {
-            e.preventDefault();
-
-            newContract();
-          }}
-        >
-          Deploy
+    <Router>
+      <Header account={account}/>
+      <main className="w-full">
+        <div className="md:w-9/12 m-auto md:max-w-2xl p-2">
+          <Routes>
+            <Route path="/" exact element={<Home/>} />
+            <Route path="/courses/publish" element={<PublishCourse />} />
+          </Routes>
         </div>
-      </div>
-
-      <div className="existing-contracts">
-        <h1> Existing Contracts </h1>
-
-        <div id="container">
-          {escrows.map((escrow) => {
-            return <Escrow key={escrow.address} {...escrow} />;
-          })}
-        </div>
-      </div>
-    </>
+      </main>
+    </Router>
   );
 }
 
