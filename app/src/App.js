@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import deploy from './helpers/contracts/deploy';
 /** Components */
 import Header from './components/Header';
 /** Pages */
@@ -24,17 +25,25 @@ const provider = window.ethereum ? new ethers.providers.Web3Provider(window.ethe
 function App() {
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
+  const [courseContract, setCourseContract] = useState();
 
   useEffect(() => {
     async function getAccounts() {
       const accounts = await provider.send('eth_requestAccounts', []);
-      //console.log(accounts[0]);
 
       setAccount(accounts[0]);
       setSigner(provider.getSigner());
     }
+    async function deployContract() {
+      setCourseContract(await deploy(signer));
+    }
 
     getAccounts();
+    if (!courseContract) {
+      console.log('deploy contract')
+      deployContract();
+    }
+    //console.log(contractAddress);
   }, [account]);
 
   return (
@@ -44,7 +53,7 @@ function App() {
         <div className="md:w-9/12 m-auto md:max-w-2xl p-2">
           <Routes>
             <Route path="/" exact element={<Home/>} />
-            <Route path="/courses/publish" element={<PublishCourse />} />
+            <Route path="/courses/publish" element={<PublishCourse contract={courseContract} signer={signer} />} />
           </Routes>
         </div>
       </main>
