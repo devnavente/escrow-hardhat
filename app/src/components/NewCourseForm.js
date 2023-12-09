@@ -7,9 +7,9 @@ import isValidFloat from '../helpers/validate/is-valid-float';
 import showErrorMessage from '../helpers/errors/show-error-message';
 import hideAllErrorMessages from '../helpers/errors/hide-all-error-messages';
 // Contract methods
-import callPublishCourse from '../helpers/contracts/publish-course';
+import callPublishCourse from '../helpers/contracts/course/publish-course';
 
-function NewCourseForm({ contract, signer }) {
+function NewCourseForm({ contract, signer, setCoursesLength }) {
     // new -> form to fill new course
     // transaction -> transaction in progress
     // failed -> transaction failed
@@ -49,7 +49,14 @@ function NewCourseForm({ contract, signer }) {
                 contract,
                 { courseName, numLessons, price },
                 signer
-            ).then(res => setState(res ? 'success' : 'failed'));
+            ).then(res => {
+                if (res) {
+                    setState('success');
+                    setCoursesLength(length => length + 1);
+                } else {
+                    setState('failed');
+                }
+            });
         } else {
             handleErrors();
         }
