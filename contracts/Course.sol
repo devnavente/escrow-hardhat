@@ -62,7 +62,8 @@ contract Course {
     }
 
     function purchaseCourse(uint _index) external payable {
-        require(msg.value >= courses[_index].price, "Not enough funds");
+        require(courses[_index].teacher != msg.sender, "Teachers can't purchase their own courses!");
+        require(msg.sender.balance >= courses[_index].price, "Not enough funds");
         require(!hasJoined(msg.sender, _index), "You have already joined this course");
 
         students[msg.sender][_index].joined = true;

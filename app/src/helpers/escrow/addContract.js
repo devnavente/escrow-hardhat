@@ -27,7 +27,7 @@ export default async function addContract(
 
 function createHTML(buttonId, arbiter, beneficiary, value) {
   return `
-    <div class="existing-contract">
+    <div className="existing-contract">
       <ul className="fields">
         <li>
           <div> Arbiter </div>
@@ -41,7 +41,7 @@ function createHTML(buttonId, arbiter, beneficiary, value) {
           <div> Value </div>
           <div> ${value} </div>
         </li>
-        <div class="button" id="${buttonId}">
+        <div className="button" id="${buttonId}">
           Approve
         </div>
       </ul>

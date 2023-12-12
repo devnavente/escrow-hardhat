@@ -4,9 +4,9 @@
     }
 
  */
-export default async function callHasJoined(student, course) {
+export default async function callGetProgress(course, contract) {
     try {
-        const txn = await contract.hasJoined(student, course);
+        const txn = await contract.getProgress(course);
 
         return txn;
     } catch (err) {

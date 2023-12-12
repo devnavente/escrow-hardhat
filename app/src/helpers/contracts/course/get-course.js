@@ -1,5 +1,5 @@
 export default async function callGetCourse(contract, courseIndex) {
-    console.log('get course');
+    //console.log('get course', contract);
     try {
         const txn = await contract.getCourse(courseIndex);
 

@@ -40,7 +40,7 @@ function App() {
 
     while (index > courses.length - 1) {
       let course = await callGetCourse(courseContract, index);
-      console.log('course', course);
+      //console.log('course App.js', course);
       if (course) {
         newCourses.push(course);
 
@@ -99,7 +99,7 @@ function App() {
           <Routes>
             <Route path="/" exact element={<Home contract={courseContract} courses={courses} />} />
             <Route path="/courses/publish" element={<PublishCourse contract={courseContract} signer={signer} setCoursesLength={setCoursesLength} />} />
-            <Route path="/courses/:teacher/:courseIndex" element={<Course signer={signer}/>} />
+            <Route path="/courses/:teacher/:courseIndex" element={<Course signer={signer} contract={courseContract} />} />
           </Routes>
         </div>
       </main>

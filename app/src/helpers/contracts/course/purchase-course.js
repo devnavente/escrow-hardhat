@@ -1,4 +1,4 @@
-export default async function callPurchaseCourse(signer, course) {
+export default async function callPurchaseCourse(signer, course, contract) {
     try {
         const txn = await contract.connect(signer).purchaseCourse(course);
 
